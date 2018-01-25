@@ -100,8 +100,8 @@ class rf_2000_model(object):
 
 
 if __name__=='__main__':
-	ebay2gg_path = './data/ebay2gg_table'
-	gpcid2name_path = './data/gpc_id2name.tsv'
+	ebay2gg_path = '../data/ebay2gg_table'
+	gpcid2name_path = '../data/gpc_id2name.tsv'
 	X_train,X_test,y_train,y_test,d = getData(ebay2gg_path,gpcid2name_path)
 	
 	model = rf_2000_model(d)
@@ -109,9 +109,9 @@ if __name__=='__main__':
 	metrics = model.validation(X_test,y_test)
 	#mean_score = model.cross_valicadion_score(X_train, y_train)
 	#print(mean_score)
-	y_pred = model.predict(X_test[:10])
+	y_pred = model.predict(X_test[:1000])
 	# for i in range(len(y_pred)):
 	# 	print(X_test[i])
 	# 	print(y_pred[i])
 	#print(metrics)
-	save_tocsv(X_test,y_pred,'./data/demo.csv')
+	save_tocsv(X_test,y_pred,'../data/demo.csv')

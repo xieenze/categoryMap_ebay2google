@@ -1,4 +1,3 @@
-from tqdm import trange
 import numpy as np
 import pandas as pd
 from collections import Counter
@@ -45,8 +44,6 @@ if __name__ == '__main__':
 	cf.read(config_path)
 	
 	
-
-
 	ebay_cate_path = cf.get("file_path", "ebay_cate_path")
 	leaf_id2gpcid_path = cf.get("file_path", "leaf_id2gpcid_path")
 	gpc_id2name_path = cf.get("file_path", "gpc_id2name_path")
