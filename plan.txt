@@ -26,9 +26,9 @@ tip:
 ----------------------------------------------------------
 solution
 方案1：直接分2000类，有监督
-参考：rf_2000-_solu.ipynb
+参考：rf_2000_solu.ipynb
 
 方案2：分两步走，先分root category再相似度匹配，第二步无监督
 参考：tf_idf-imbalance_solu-Copy1.ipynb
 
-数据预处理：参考test.ipynb
+数据预处理：参考data_preprocess.ipynb
