@@ -19,7 +19,7 @@ reference：http://blog.csdn.net/elikai/article/details/46848671
 2 rf_2000_solu(直接分2000类)
 数据分析出google 5k+ category中实际只采用了2000 category做mapping，因此直接建立随机森林end2end分2000类，特征抽取方法同1，采用tf-idf.
 
-详细的背景可见ppt
+详细的背景和解决方案等信息可见ppt
 
 数据处理部分：
 data_process.py 脚本 和 config.ini文件  接收3张表的路径，保存一张表的数据。
