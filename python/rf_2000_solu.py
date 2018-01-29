@@ -8,6 +8,8 @@ from pprint import pprint
 import numpy as np
 import pandas as pd
 from tqdm import trange
+import configparser
+import sys
 
 from imblearn.combine import SMOTEENN 
 from imblearn.over_sampling import RandomOverSampler,SMOTE
@@ -77,31 +79,33 @@ def getData(ebay2gg_path,gpcid2name_path,ebay2gg_sep=',',gpcid2name_sep='\t'):
 
 
 def save_tocsv(ebay_cate,pred_gg_cate,save_path):
+	'''
+	输入 ebay category数组，和predict的google category数组，和保存的路径
+	将结果一一对应保存下来
+	要求len(ebay category) == len(pred gg category)
+	example:
+	X_test = ['a','b','c']
+	y_pred = model.pred(X_test)
+	save_tocsv(X_test,y_pred,'../csv/result.csv')
+	'''
 	arr = [[ebay_cate[i],pred_gg_cate[i]] for i in range(len(pred_gg_cate))]
 	df = pd.DataFrame(arr,columns=['ebay_category',"pred_google_category"])
 	df.to_csv(save_path,header=True,index=False)
 	print("csv file is saved to {}".format(os.path.abspath(save_path)))
 
-def load_model(save_path):
-	from sklearn.externals import joblib
-	print("loading exist model from {}...".format(os.path.abspath(save_path)))
-	model = joblib.load(save_path)
-	print("model loaded!")
-	return model
+
 
 
 
 class rf_2000_model(object):
 	'''
-	构建pipeline，包括了tfidf抽取特征和 rf分类
+	构建pipeline，包括了tfidf抽取特征,降维和 rf分类
 	'''
 	def __init__(self,d,n_estimators=150):
-		#self.pipeline = make_pipeline(TfidfVectorizer(),RandomForestClassifier(n_estimators=20,n_jobs=8,verbose=0))
 		
-
 		self.pipeline = make_pipeline(TfidfVectorizer(),\
                          random_projection.SparseRandomProjection(),\
-                         RandomForestClassifier(n_estimators=n_estimators,n_jobs=-1,oob_score=True))
+                         RandomForestClassifier(n_estimators=n_estimators,n_jobs=-1))
      
 		self.d = d
 	def train(self,X_train, y_train):
@@ -130,18 +134,35 @@ class rf_2000_model(object):
 		joblib.dump(self.pipeline, save_path,compress=3)
 		print("model is saved in {}".format(os.path.abspath(save_path)))
 
+	def load_model(self,save_path):
+		from sklearn.externals import joblib
+		print("loading exist model from {}...".format(os.path.abspath(save_path)))
+		#model = rf_2000_model(self.d)
+		#model.pipeline = joblib.load(save_path)
+		self.pipeline = joblib.load(save_path)
+		print("model loaded!")
+		#return model
+
 	
    
 
 
 
 if __name__=='__main__':
-	ebay2gg_path = '../data/ebay2gg_table'
-	gpcid2name_path = '../data/gpc_id2name.tsv'
+	cf = configparser.ConfigParser()
+	if len(sys.argv)!=2:
+		print("please input config_file path,such as python xxx.py ./config.ini")
+		sys.exit()
+	config_path = sys.argv[1]
+	cf.read(config_path)
+
+
+	ebay2gg_path = cf.get('rf_2000_model','ebay2gg_path')
+	gpcid2name_path = cf.get('rf_2000_model','gpcid2name_path')
 	X_train,X_test,y_train,y_test,d = getData(ebay2gg_path,gpcid2name_path)
 	
-	model = rf_2000_model(d,n_estimators=150)
-	model.train(X_train, y_train)
+	#model = rf_2000_model(d,n_estimators=20)
+	# model.train(X_train, y_train)
 	#metrics = model.validation(X_test,y_test)
 	#mean_score = model.cross_valicadion_score(X_train, y_train)
 	#print(mean_score)
@@ -151,13 +172,15 @@ if __name__=='__main__':
 	# 	print(y_pred[i])
 	# 	
 	# 	
-	print(model.score(X_test,y_test))
+	# print(model.score(X_test,y_test))
 
-	#model.save('../model/rf6.pkl',compress=3)
+	# model.save('../model/rf6.pkl',compress=3)
 
-
-	#model = load_model('../model/rf6.pkl')
-	#print(model.score(X_test,y_test))
+	model = rf_2000_model(d)
+	model.load_model('../model/rf.pkl')
+	#print(model_1.score(X_test,y_test))
+	metrics = model.validation(X_test,y_test)
+	print(metrics)
 
 	#model.save('../model/rf.pkl',compress=3)
 	#save_tocsv(X_test,y_pred,'../data/demo.csv')

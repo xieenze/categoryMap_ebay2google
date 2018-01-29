@@ -38,7 +38,7 @@ def get_ebay2gg_cate_table(ebay_cate_path,leaf_id2gpcid_path,gpc_id2name_path,\
 if __name__ == '__main__':
 	cf = configparser.ConfigParser()
 	if len(sys.argv)!=2:
-		print("please inpyt config_file path,such as python xxx.py ./config.ini")
+		print("please input config_file path,such as python xxx.py ./config.ini")
 		sys.exit()
 	config_path = sys.argv[1]
 	cf.read(config_path)
