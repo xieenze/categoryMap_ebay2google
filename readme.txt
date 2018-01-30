@@ -54,3 +54,7 @@ ebay category name map google category name表。
 2 cd python
 3 运行数据预处理程序  python us/data_preprocess.py ../conf/config.ini
 4 运行模型程序   python us/rf_2000_model.py ../conf_config.ini
+
+
+tips:
+ipynb下的代码方便交互式编程，加下划线前缀的代码已经过时，没有直接的用处，但是如果有些问题可以看看这些代码，希望能提供些帮助！
