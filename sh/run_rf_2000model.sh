@@ -1,1 +1,1 @@
- python ../python/rf_2000_solu.py  ../conf/config.ini
+python ../python/us/rf_2000_solu.py  ../conf/config.ini
